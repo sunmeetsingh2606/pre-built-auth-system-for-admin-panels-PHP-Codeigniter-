@@ -9,7 +9,7 @@ class Application_Hooks {
 	| If admin setup return true otherwise redirect to setup page.
 	*/
 	function is_admin_setup() {
-		echo "working";
+		
 	}
 
 

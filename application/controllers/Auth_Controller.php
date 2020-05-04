@@ -17,7 +17,9 @@ class Auth_Controller extends CI_Controller {
 	function login_view() {
 		define ( "LOGINPAGE", TRUE );	// to differentiate in hooks
 		
-		$this->load->view("auth/login");
+		$this->load->view( "auth/templates/header" );
+		$this->load->view( "auth/login" );
+		$this->load->view( "auth/templates/footer" );
 	}
 
 }
