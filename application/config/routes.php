@@ -56,3 +56,5 @@ $route['translate_uri_dashes'] = FALSE;
 
 // Custom routes for the application
 $route['login'] = 'Auth_Controller/login_view';
+$route['admin-setup'] = 'Auth_Controller/admin_setup_view';
+$route['do-admin-setup'] = 'Auth_Controller/do_admin_setup';
