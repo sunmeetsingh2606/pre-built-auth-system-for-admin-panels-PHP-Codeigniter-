@@ -24,6 +24,8 @@ class Auth_Controller extends CI_Controller {
 	*/
 	function login_view() {
 		define ( "LOGINPAGE", TRUE );	// to differentiate in hooks
+		$this->load->helper( "form" );
+		$this->load->library( "form_validation" );
 		
 		$this->load->view( "auth/templates/header" );
 		$this->load->view( "auth/login" );
@@ -39,7 +41,7 @@ class Auth_Controller extends CI_Controller {
 	function admin_setup_view() {
 		define ( "ADMINSETUPPAGE", TRUE );	// to differentiate in hooks
 		$this->load->helper( "form" );
-		$this->load->library( "form_validation" );		
+		$this->load->library( "form_validation" );
 
 		$this->load->view( "auth/templates/header" );
 		$this->load->view( "auth/admin_setup" );
@@ -95,7 +97,7 @@ class Auth_Controller extends CI_Controller {
 				"name" => "admin",
 				"priviledges" => json_encode( array( "0" => "*" ) )
 			);
-			$role_query = $this->db->insert( "roles", $role_data );
+			$role_query = $this->Site_Model->insert_row( "roles", $role_data );
 
 			if ( !$role_query ) {
 				$message = "Something went wrong while adding the user. Please try again by:<br><br>
@@ -113,7 +115,7 @@ class Auth_Controller extends CI_Controller {
 				"date_created" => date( "d/m/Y h:i:s A" ),
 				"date_updated" => date( "d/m/Y h:i:s A" )
 			);
-			$user_query = $this->db->insert( "users", $user_data );
+			$user_query = $this->Site_Model->insert_row( "users", $user_data );
 
 			if ( !$user_query ) {
 				$message = "Something went wrong while adding the user. Please try again by:<br><br>
@@ -123,6 +125,59 @@ class Auth_Controller extends CI_Controller {
 			}				
 
 			redirect( "login" );
+		}
+	}
+
+	/*
+	| Function triggered with admin login form submit
+	*/
+	function do_admin_login() {
+		define ( "LOGINPAGE", TRUE );	// to differentiate in hooks
+		$this->load->helper( "form" );
+		$this->load->library( "form_validation" );
+		$this->form_validation->set_error_delimiters('<p class="form-error">', '</p>');
+
+		// form validation rules
+		$validation_rules = array(
+			array(
+				"field" => "email",
+				"label" => "Email",
+				"rules" => "required"
+			),
+			array(
+				"field" => "password",
+				"label" => "Password",
+				"rules" => "required"
+			)
+		);
+		$this->form_validation->set_rules( $validation_rules );
+
+		// check for form validations
+		if ( $this->form_validation->run() == FALSE ) {
+			$this->load->view( "auth/templates/header" );
+			$this->load->view( "auth/login" );
+			$this->load->view( "auth/templates/footer" );
+		}else {
+			$email = $this->input->post( "email" );
+			$password = $this->input->post( "password" );
+
+			$user_data = $this->Site_Model->get_data( "users", array( "email" => $email ) );
+			if ( $user_data ) {
+				if ($user_data[0]["password"] == $password) {
+					$session_data = array(
+						"login_details" => array(
+							"user_id" => $user_data[0]["id"],
+						)
+					);
+
+					// set session data
+					$this->session->set_userdata( $session_data );
+					
+					if ( $this->session->userdata("login_details")["user_id"] ) {
+						redirect( "dashboard" );
+					}
+				}
+			}
 		}
 	}
 

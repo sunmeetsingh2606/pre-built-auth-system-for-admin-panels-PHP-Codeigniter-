@@ -58,3 +58,6 @@ $route['translate_uri_dashes'] = FALSE;
 $route['login'] = 'Auth_Controller/login_view';
 $route['admin-setup'] = 'Auth_Controller/admin_setup_view';
 $route['do-admin-setup'] = 'Auth_Controller/do_admin_setup';
+$route['do-admin-login'] = 'Auth_Controller/do_admin_login';
+
+$route['dashboard'] = 'Dashboard_Controller/index';

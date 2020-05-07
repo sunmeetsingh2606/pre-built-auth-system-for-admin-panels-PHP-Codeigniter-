@@ -47,4 +47,41 @@ class Site_Model extends CI_Model {
 			priviledges text NOT NULL)" );
 	}
 
+
+
+	/*
+	| Function to insert new row in the table
+	*/
+	function insert_row( $table_name, $data ) {
+		$query = $this->db->insert( $table_name, $data );
+
+		if ( $query ) {
+			return TRUE;
+		}else {
+			return FALSE;
+		}
+	}
+
+
+
+	/*
+	| Function to get data from the table
+	*/
+	function get_data( $table_name, $where = NULL ) {
+
+		// add where clause to the query
+		if ( $where != NULL ) {
+			$this->db->where( $where );
+		}
+
+		$query = $this->db->get( $table_name );
+
+		if ( $query ) {
+			return $query->result_array();
+		}else {
+			return FALSE;
+		}
+
+	}
+
 }

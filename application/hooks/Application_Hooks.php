@@ -19,7 +19,11 @@ class Application_Hooks {
 			if ( $query->num_rows() == 0 ) {
 				redirect( 'admin-setup' );
 			}else {
-				if ( defined( "ADMINSETUPPAGE" ) ) {
+				if ( defined( "LOGINPAGE" ) ) {
+					if ( !empty( $this->CI->session->userdata( "login_details" ) ) || $this->CI->session->userdata( "login_details" ) != null ) {
+						redirect( 'dashboard' );
+					}
+				}else {
 					redirect( 'login' );
 				}
 			}
@@ -56,9 +60,7 @@ class Application_Hooks {
 			return FALSE;
 		}
 
-		if ( !empty( $this->CI->session->userdata( "login_details" ) ) && $this->CI->session->userdata( "login_details" ) == null ) {
-
-		}else {
+		if ( empty( $this->CI->session->userdata( "login_details" ) ) && $this->CI->session->userdata( "login_details" ) == null ) {
 			redirect( 'login' );
 		}
 	}
