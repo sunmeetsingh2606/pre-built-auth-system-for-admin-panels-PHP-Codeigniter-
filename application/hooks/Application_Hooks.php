@@ -12,19 +12,21 @@ class Application_Hooks {
 	| 
 	| If admin setup return true otherwise redirect to setup page.
 	*/
-	function is_admin_setup() {
-		if ( defined( "ADMINSETUPPAGE" ) ) {
-			return FALSE;
-		}
-		
+	function is_admin_setup() {		
 		if ( $this->CI->db->table_exists( "users" ) ) {
 			$query = $this->CI->db->get( "users" );
 
 			if ( $query->num_rows() == 0 ) {
 				redirect( 'admin-setup' );
+			}else {
+				if ( defined( "ADMINSETUPPAGE" ) ) {
+					redirect( 'login' );
+				}
 			}
 		}else {
-			redirect( 'admin-setup' );
+			if ( !defined( "ADMINSETUPPAGE" ) ) {
+				redirect( 'admin-setup' );
+			}
 		}
 	}
 
@@ -50,6 +52,7 @@ class Application_Hooks {
 		}
 
 		if ( defined( "ADMINSETUPPAGE" ) ) {
+			$this->is_admin_setup();
 			return FALSE;
 		}
 
